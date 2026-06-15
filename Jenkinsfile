@@ -31,6 +31,11 @@ pipeline{
                 echo 'Running Unit Tests...'
                 sh "mvn test"  
             }
+            post{
+                always{
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
         }
         stage('CoverageAnalysis'){
              steps{
@@ -39,6 +44,7 @@ pipeline{
             }
         }
         stage('Package'){
+
             input{
                 message "Package the app with version ${params.APPVERSION}?"
                 ok "Yes, Package it!"
