@@ -39,7 +39,7 @@ pipeline{
             }
         }
         stage('Package'){
-            inputs{
+            input{
                 echo 'Select the application version to package: ${params.APPVERSION}'
                 message "Package the app with version ${params.APPVERSION}?"
                 ok "Yes, Package it!"
