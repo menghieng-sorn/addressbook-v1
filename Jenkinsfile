@@ -1,60 +1,35 @@
-pipeline{
+Pipeline{
     agent any
-    tools {
-        jdk 'myjava'
-        maven 'mymaven'
-    }
-     parameters {
-        string(name: 'Env', defaultValue: 'Test', description: 'Version to deploy')
-        booleanParam(name: 'executeTests', defaultValue: true, description: 'Decide to run test cases')
-        choice(name: 'APPVERSION', choices: ['1.1', '1.2', '1.3'], description: 'Select application version')
-     }
-
     stages{
         stage('Compile'){
             steps{
-                echo "Building for environment ${params.Env}..."
+                echo 'Compiling...'
                 sh "mvn compile"
             }
         }
         stage('CodeReview'){
             steps{
-                echo 'CodeReview...'
+                echo 'Code Review...'
                 sh "mvn pmd:pmd"
             }
         }
         stage('UnitTest'){
-            when {
-                expression { params.executeTests == true }
-            }
             steps{
-                echo 'UnitTest...'
-                sh "mvn test"
-            }
-            post{
-                always{
-                    junit 'target/surefire-reports/*.xml'
-                }
+                echo 'Running Unit Tests...'
+                sh "mvn test"  
             }
         }
         stage('CoverageAnalysis'){
              steps{
-                echo 'CoverageAnalysis...'
+                echo 'Analyzing Code Coverage...'
                 sh "mvn verify"
             }
-            
         }
-        stage('Package the app'){
-            input{
-              
-                message "Package the app with version ${params.APPVERSION}?"
-                ok "Yes, Package it!"
-            }
-             steps{
-                  echo "Select the application version to package: ${params.APPVERSION}"
+        stage('Package'){
+            steps{
+                echo 'Packaging...'
                 sh "mvn package"
             }
-            
         }
     }
 }
