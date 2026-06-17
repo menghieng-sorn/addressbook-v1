@@ -14,7 +14,7 @@ pipeline {
      
      environment {
         BUILD_SERVER='ec2-user@18.142.166.105'
-        IMAGE_NAME='menghiengsornit/addressbook:$BUILD_NUMBER'
+        IMAGE_NAME='menghiengsornit/addbook:$BUILD_NUMBER'
      }
 
     stages {
